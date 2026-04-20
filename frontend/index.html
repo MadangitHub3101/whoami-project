@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Are You?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF3366;
+      --secondary: #FFD700;
+      --dark: #0A0E27;
+      --light: #F5F5F5;
+      --accent: #00FFAA;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: linear-gradient(135deg, var(--dark) 0%, #1a1f3a 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background circles */
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    body::before {
+      width: 400px;
+      height: 400px;
+      background: var(--primary);
+      top: -200px;
+      left: -200px;
+      animation-delay: 0s;
+    }
+
+    body::after {
+      width: 500px;
+      height: 500px;
+      background: var(--accent);
+      bottom: -250px;
+      right: -250px;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, 50px) scale(1.1); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3rem;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 5rem;
+      color: var(--light);
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(255, 51, 102, 0.5); }
+      to { text-shadow: 0 0 40px rgba(255, 51, 102, 0.8), 0 0 60px rgba(255, 51, 102, 0.5); }
+    }
+
+    .subtitle {
+      color: var(--secondary);
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      opacity: 0.9;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .button-container {
+      margin: 3rem 0;
+    }
+
+    button {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2rem;
+      padding: 1.5rem 4rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #FF1744 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      letter-spacing: 0.1em;
+      box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255, 51, 102, 0.6);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    button span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .response-box {
+      margin-top: 2rem;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .message {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 3rem;
+      color: var(--accent);
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      text-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .message.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .error {
+      color: var(--primary);
+      font-size: 1rem;
+      font-family: 'Noto Sans', sans-serif;
+      text-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Particles effect */
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 50%;
+      opacity: 0;
+      animation: particle-float 3s ease-out forwards;
+    }
+
+    @keyframes particle-float {
+      0% {
+        opacity: 1;
+        transform: translateY(0) translateX(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) translateX(var(--x)) scale(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 3rem;
+      }
+      button {
+        font-size: 1.5rem;
+        padding: 1rem 2rem;
+      }
+      .message {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MYSTERY</h1>
+    <p class="subtitle">Click to reveal the identity</p>
+    
+    <div class="button-container">
+      <button id="whoBtn">
+        <span>WHO ARE YOU?</span>
+      </button>
+    </div>
+
+    <div class="response-box">
+      <div id="response"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    const button = document.getElementById('whoBtn');
+    const responseDiv = document.getElementById('response');
+
+    // Get API URL from config or use default
+    const API_URL = window.CONFIG?.API_URL || 'http://localhost:3000';
+
+    button.addEventListener('click', async () => {
+      // Clear previous response
+      responseDiv.innerHTML = '';
+      responseDiv.className = '';
+
+      // Show loading
+      responseDiv.innerHTML = '<div class="loading"></div>';
+
+      // Create particle effect
+      createParticles(button);
+
+      try {
+        const response = await fetch(`${API_URL}/api/whoami`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        // Display the message
+        responseDiv.innerHTML = `<div class="message">${data.message}</div>`;
+        setTimeout(() => {
+          responseDiv.querySelector('.message').classList.add('show');
+        }, 100);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        responseDiv.innerHTML = `<div class="message error show">Error: Unable to connect to backend server. Please try again.</div>`;
+      }
+    });
+
+    function createParticles(element) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+        particle.style.setProperty('--x', `${(Math.random() - 0.5) * 200}px`);
+        particle.style.animationDelay = `${Math.random() * 0.3}s`;
+        document.body.appendChild(particle);
+
+        setTimeout(() => particle.remove(), 3000);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -4,6 +4,6 @@ window.CONFIG = {
     
   API_URL: 'whoami-project-production.up.railway.app'
 
-  //API_URL: 'https://octopus-app-k6eo3.ondigitalocean.app'
+ 
   // For local development, use: 'http://localhost:3000'
 };

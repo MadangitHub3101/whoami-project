@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+    container_name: whoami-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - FRONTEND_URL=http://<YOUR_AZURE_VM_PUBLIC_IP>:8080
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: whoami-frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    restart: unless-stopped

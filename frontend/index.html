@@ -252,7 +252,7 @@
     const responseDiv = document.getElementById('response');
 
     // Get API URL from config or use default
-    const API_URL = window.CONFIG?.API_URL || 'http://localhost:3000';
+    const API_URL = window.CONFIG?.API_URL;
 
     button.addEventListener('click', async () => {
       // Clear previous response
@@ -289,7 +289,7 @@
     function createParticles(element) {
       const rect = element.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;api
+      const centerY = rect.top + rect.height / 2;
 
       for (let i = 0; i < 20; i++) {
         const particle = document.createElement('div');
